@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nexus_game/authflow.dart';
 import 'package:nexus_game/onbordingscreen/onbording.dart';
-import 'package:nexus_game/register/login.dart';
+//import 'package:nexus_game/register/login.dart';
 class AppRoot extends StatefulWidget {
   const AppRoot({super.key});
 
