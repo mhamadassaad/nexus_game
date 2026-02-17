@@ -1,11 +1,18 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nexus_game/approot.dart';
+import 'package:nexus_game/firebase_options.dart';
 import 'package:nexus_game/onbordingscreen/onbording.dart';
 import 'package:nexus_game/register/login.dart';
 import 'package:nexus_game/register/register.dart';
 import 'package:nexus_game/screen/home.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // تشغيل فايربيس باستخدام الإعدادات التي ظهرت عندك
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
