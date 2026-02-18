@@ -2,6 +2,7 @@ import 'dart:ui';
 //hata yekon el UI wad7 w lama bedi est3aml colors advance
 import 'package:flutter/material.dart';
 // lezm tekon bi kel class la a5aber el editer eno ana 3am echt8l flutter
+import 'package:firebase_auth/firebase_auth.dart';
 class RegisterScreen extends StatefulWidget {
   final VoidCallback onRegister;
   //hayda elo che8el la edam 
@@ -25,6 +26,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
   //Controller Email 7ata ya3rf cho 3am yed5l el user
   final TextEditingController _passwordController = TextEditingController();
   ////Controller Password 7ata ya3rf cho 3am yed5l el user
+  ///FireBase Function Start
+  // دالة التسجيل "المستقبلية"
+Future<void> _registerUser() async {
+  try {
+    // 1. إرسال الإيميل والباسورد لـ Firebase
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: _emailController.text.trim(), // trim تمسح الفراغات الزائدة
+      password: _passwordController.text.trim(),
+    );
+
+    // 2. إذا نجح التسجيل، ننتقل للخطوة التالية (مثلاً الصفحة الرئيسية)
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Character Spawned Successfully!")),
+    );
+    
+    widget.onRegister(); // استدعاء الـ Callback الأصلي
+
+  } on FirebaseAuthException catch (e) {
+    // 3. صيد أخطاء Firebase (إيميل مكرر، باسورد ضعيف، إلخ)
+    String message = "Registration Failed";
+    if (e.code == 'weak-password') {
+      message = "The password is too weak!";
+    } else if (e.code == 'email-already-in-use') {
+      message = "Account already exists!";
+    }
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
+  } catch (e) {
+    // خطأ غير متوقع
+    print(e.toString());
+  }
+}
+  ///FireBase Function End
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,7 +202,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           child: ElevatedButton(
                             //el zer yali 3am yesir 3elh click
-                            onPressed: widget.onRegister,
+                           // onPressed: widget.onRegister,
+                           onPressed: _registerUser, // بدلاً من widget.onRegister
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.pink,
                               foregroundColor: Colors.white,

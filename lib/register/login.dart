@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:nexus_game/screen/manscreen.dart';
 import 'package:nexus_game/widget/CustomClipper/gamingbuttonclipper.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 class LoginScreen extends StatefulWidget {
   final VoidCallback onLogin;
   final VoidCallback onGoToRegister;
@@ -21,7 +21,47 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _keepActive = false;
+  //Function Login With FireBase
+  Future<void> _signIn() async {
+  try {
+    // إظهار مؤشر تحميل (اختياري لكن احترافي)
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator(color: Colors.cyan)),
+    );
 
+    // العملية الأساسية: تسجيل الدخول
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+
+    // إغلاق مؤشر التحميل
+    Navigator.pop(context);
+
+    // إذا نجح، ننتقل للشاشة الرئيسية
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const MainLayout()),
+    );
+
+  } on FirebaseAuthException catch (e) {
+    Navigator.pop(context); // إغلاق التحميل عند الخطأ
+    
+    String message = "Authentication Failed";
+    if (e.code == 'user-not-found') {
+      message = "No player found with this email.";
+    } else if (e.code == 'wrong-password') {
+      message = "Incorrect password (Cipher).";
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.redAccent),
+    );
+  }
+}
+  //End Fucntio  Login With Firebase
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,13 +184,14 @@ class _LoginScreenState extends State<LoginScreen> {
                              variant: GamingButtonVariant.primary,
                              width: double.infinity,
                                height: 56,
-                               onPressed: () {
-                               // ننتقل لصفحة MainScreen عند الضغط
-                               Navigator.pushReplacement(
-                               context,
-                             MaterialPageRoute(builder: (_) => const MainLayout()),
-                           );
-                        },
+                               onPressed: _signIn,
+                        //        () {
+                        //        // ننتقل لصفحة MainScreen عند الضغط
+                        //        Navigator.pushReplacement(
+                        //        context,
+                        //      MaterialPageRoute(builder: (_) => const MainLayout()),
+                        //    );
+                        // },
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                        ),
 
