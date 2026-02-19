@@ -38,6 +38,34 @@ final List<Map<String, String>> _boostItems = [
   {"image": "assets/images/r66.png", "title": "Microphone"},
 ];
 //End For Row
+//For Best Seller Item
+final List<Map<String, String>> _products = [
+  {
+    "name": "Assassin's Creed ",
+    "category": "RPG",
+    "price": "\$40",
+    "image": "assets/images/b1.png"
+  },
+  {
+    "name": "Cyber Pank",
+    "category": "Action",
+    "price": "\$20",
+    "image": "assets/images/b2.png"
+  },
+  {
+    "name": "GTA 5",
+    "category": "Action",
+    "price": "\$15",
+    "image": "assets/images/b3.png"
+  },
+  {
+    "name": "Ghost of Tsushima",
+    "category": "RPG",
+    "price": "\$25",
+    "image": "assets/images/b4.png"
+  },
+];
+//End Best Seller Item
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -296,69 +324,152 @@ Widget _buildBoostList() {
   );
 }
   // شبكة المنتجات (2x2)
-  Widget _buildProductGrid() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 15,
-          mainAxisSpacing: 15,
-          childAspectRatio: 0.75,
-        ),
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          return _buildProductCard();
-        },
+  // Widget _buildProductGrid() {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+  //     child: GridView.builder(
+  //       shrinkWrap: true,
+  //       physics: NeverScrollableScrollPhysics(),
+  //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //         crossAxisCount: 2,
+  //         crossAxisSpacing: 15,
+  //         mainAxisSpacing: 15,
+  //         childAspectRatio: 0.75,
+  //       ),
+  //       itemCount: 4,
+  //       itemBuilder: (context, index) {
+  //         return _buildProductCard();
+  //       },
+  //     ),
+  //   );
+  // }
+Widget _buildProductGrid() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    child: GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 15,
+        mainAxisSpacing: 15,
+        childAspectRatio: 0.75,
       ),
-    );
-  }
-
+      itemCount: _products.length, // يعتمد على عدد المنتجات في القائمة
+      itemBuilder: (context, index) {
+        // نمرر بيانات المنتج الواحد بناءً على الـ index
+        return _buildProductCard(_products[index]); 
+      },
+    ),
+  );
+}
   // كارد المنتج الواحد
-  Widget _buildProductCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Color(0xFF0D1B2A),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20), topRight: Radius.circular(20),
-          bottomLeft: Radius.circular(20), bottomRight: Radius.circular(5),
-        ),
+  // Widget _buildProductCard() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       color: Color(0xFF0D1B2A),
+  //       borderRadius: BorderRadius.only(
+  //         topLeft: Radius.circular(20), topRight: Radius.circular(20),
+  //         bottomLeft: Radius.circular(20), bottomRight: Radius.circular(5),
+  //       ),
+  //     ),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Expanded(
+  //           child: ClipRRect(
+  //             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //             child: Image.network('https://via.placeholder.com/150', fit: BoxFit.cover, width: double.infinity),
+  //           ),
+  //         ),
+  //         Padding(
+  //           padding: const EdgeInsets.all(10.0),
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Text('GPUS', style: TextStyle(color: Colors.cyan, fontSize: 10)),
+  //               Text('RTX 5090 Ti', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+  //               SizedBox(height: 8),
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                 children: [
+  //                   Text('\$1599', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+  //                   Container(
+  //                     padding: EdgeInsets.all(5),
+  //                     decoration: BoxDecoration(color: Colors.cyan, borderRadius: BorderRadius.circular(8)),
+  //                     child: Icon(Icons.shopping_cart, size: 16, color: Colors.black),
+  //                   )
+  //                 ],
+  //               )
+  //             ],
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
+  Widget _buildProductCard(Map<String, String> product) { // أضفنا بارامتر لاستقبال البيانات
+  return Container(
+    decoration: const BoxDecoration(
+      color: Color(0xFF0D1B2A),
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(20),
+        topRight: Radius.circular(20),
+        bottomLeft: Radius.circular(20),
+        bottomRight: Radius.circular(5),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              child: Image.network('https://via.placeholder.com/150', fit: BoxFit.cover, width: double.infinity),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            child: Image.asset(
+              product['image']!, // استخدام Asset Image
+              fit: BoxFit.cover,
+              width: double.infinity,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('GPUS', style: TextStyle(color: Colors.cyan, fontSize: 10)),
-                Text('RTX 5090 Ti', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('\$1599', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(color: Colors.cyan, borderRadius: BorderRadius.circular(8)),
-                      child: Icon(Icons.shopping_cart, size: 16, color: Colors.black),
-                    )
-                  ],
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                product['category']!, // الفئة من القائمة
+                style: const TextStyle(color: Colors.cyan, fontSize: 10),
+              ),
+              Text(
+                product['name']!, // الاسم من القائمة
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    product['price']!, // السعر من القائمة
+                    style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.cyan,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.shopping_cart, size: 16, color: Colors.black),
+                  )
+                ],
+              )
+            ],
+          ),
+        )
+      ],
+    ),
+  );
+}
 }
