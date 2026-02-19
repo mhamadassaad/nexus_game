@@ -27,6 +27,17 @@ final List<Map<String, String>> _bannerItems = [
     "sub": "NEW ARRIVALS"
   },
 ];
+//End For Images Slider
+//For Row
+final List<Map<String, String>> _boostItems = [
+  {"image": "assets/images/r11.png", "title": "XP Headsets"},
+  {"image": "assets/images/r22.png", "title": "Smart  Watch"},
+  {"image": "assets/images/r33.png", "title": "Headsets"},
+  {"image": "assets/images/r44.png", "title": "Controller"},
+  {"image": "assets/images/r55.png", "title": "Keyboard"},
+  {"image": "assets/images/r66.png", "title": "Microphone"},
+];
+//End For Row
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +46,7 @@ final List<Map<String, String>> _bannerItems = [
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Icon(Icons.apps, color: Colors.cyan),
-        title: Text('NEXUS GEAR', style: TextStyle(color: Colors.cyan, fontWeight: FontWeight.bold, letterSpacing: 2)),
+        title: Text('NEXUS Games', style: TextStyle(color: Colors.cyan, fontWeight: FontWeight.bold, letterSpacing: 2)),
         actions: [
           Icon(Icons.search, color: Colors.white),
           SizedBox(width: 15),
@@ -202,38 +213,88 @@ final List<Map<String, String>> _bannerItems = [
 }
 
   // لستة الـ Boosts الأفقية
-  Widget _buildBoostList() {
-    return SizedBox(
-      height: 120,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 6,
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        itemBuilder: (context, index) {
-          return Container(
-            width: 90,
-            margin: EdgeInsets.symmetric(horizontal: 8),
-            decoration: BoxDecoration(
-              color: Color(0xFF101E2D),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15), topRight: Radius.circular(15),
-                bottomLeft: Radius.circular(15), bottomRight: Radius.circular(3),
+  // Widget _buildBoostList() {
+  //   return SizedBox(
+  //     height: 120,
+  //     child: ListView.builder(
+  //       scrollDirection: Axis.horizontal,
+  //       itemCount: 6,
+  //       padding: EdgeInsets.symmetric(horizontal: 10),
+  //       itemBuilder: (context, index) {
+  //         return Container(
+  //           width: 90,
+  //           margin: EdgeInsets.symmetric(horizontal: 8),
+  //           decoration: BoxDecoration(
+  //             color: Color(0xFF101E2D),
+  //             borderRadius: BorderRadius.only(
+  //               topLeft: Radius.circular(15), topRight: Radius.circular(15),
+  //               bottomLeft: Radius.circular(15), bottomRight: Radius.circular(3),
+  //             ),
+  //           ),
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               Icon(Icons.flash_on, color: Colors.yellow, size: 30),
+  //               SizedBox(height: 10),
+  //               Text('BOOST', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+  //             ],
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
+Widget _buildBoostList() {
+  return SizedBox(
+    height: 120,
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      // نعتمد على طول القائمة التي أنشأناها
+      itemCount: _boostItems.length, 
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      itemBuilder: (context, index) {
+        return Container(
+          width: 90,
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFF101E2D),
+            // قمت بإضافة Border خفيف ليعطي شكل تقني (Techy look)
+            border: Border.all(color: Colors.cyan.withOpacity(0.1)), 
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(15),
+              topRight: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+              bottomRight: Radius.circular(3),
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // استبدال الأيقونة بالصورة من الـ Assets
+              Image.asset(
+                _boostItems[index]['image']!,
+                width: 45, // حجم مناسب للصورة داخل المربع
+                height: 45,
+                fit: BoxFit.contain,
               ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.flash_on, color: Colors.yellow, size: 30),
-                SizedBox(height: 10),
-                Text('BOOST', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
+              const SizedBox(height: 12),
+              Text(
+                _boostItems[index]['title']!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+  );
+}
   // شبكة المنتجات (2x2)
   Widget _buildProductGrid() {
     return Padding(
