@@ -1,6 +1,32 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+int _currentPage = 0; // لمراقبة الصفحة الحالية
+final PageController _pageController = PageController(); // للتحكم في السلايدر
+
+// قائمة البيانات: غير أسماء الصور لتطابق ما وضعته في مجلد الـ images
+final List<Map<String, String>> _bannerItems = [
+  {
+    "image": "assets/images/s1.png", 
+    "title": "ELITE LOADOUT DROP",
+    "sub": "SEASON PASS EXCLUSIVE"
+  },
+  {
+    "image": "assets/images/s2.png", 
+    "title": "NEON STRIKE EVENT",
+    "sub": "LIMITED TIME ONLY"
+  },
+  {
+    "image": "assets/images/s3.png", 
+    "title": "CYBER GEAR UP",
+    "sub": "NEW ARRIVALS"
+  },
+];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,41 +78,128 @@ class HomePage extends StatelessWidget {
   }
 
   // الـ Banner اللي فوق
+  // Widget _buildBanner() {
+  //   return Container(
+  //     width: double.infinity,
+  //     height: 200,
+  //     decoration: BoxDecoration(
+  //       image: DecorationImage(
+  //         image: NetworkImage('https://via.placeholder.com/600x300'), // حط صورة الغابة هون
+  //         fit: BoxFit.cover,
+  //         colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
+  //       ),
+  //     ),
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(20.0),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.end,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text('SEASON PASS EXCLUSIVE', style: TextStyle(color: Colors.cyan, fontSize: 12, fontWeight: FontWeight.bold)),
+  //           Text('ELITE LOADOUT DROP', style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
+  //           SizedBox(height: 10),
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               Container(width: 15, height: 4, color: Colors.grey),
+  //               SizedBox(width: 5),
+  //               Container(width: 30, height: 4, color: Colors.cyan),
+  //               SizedBox(width: 5),
+  //               Container(width: 15, height: 4, color: Colors.grey),
+  //             ],
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
   Widget _buildBanner() {
-    return Container(
-      width: double.infinity,
-      height: 200,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage('https://via.placeholder.com/600x300'), // حط صورة الغابة هون
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
+  return SizedBox(
+    height: 220, // زيادة الطول قليلاً ليتناسب مع السلايدر
+    width: double.infinity,
+    child: Stack(
+      children: [
+        // 1. محرك الصور (PageView)
+        PageView.builder(
+          controller: _pageController,
+          onPageChanged: (int index) {
+            setState(() {
+              _currentPage = index;
+            });
+          },
+          itemCount: _bannerItems.length,
+          itemBuilder: (context, index) {
+            return Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(_bannerItems[index]['image']!),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.4),
+                    BlendMode.darken,
+                  ),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _bannerItems[index]['sub']!,
+                      style: const TextStyle(
+                        color: Colors.cyan,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    Text(
+                      _bannerItems[index]['title']!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 30), // مساحة للنقاط في الأسفل
+                  ],
+                ),
+              ),
+            );
+          },
         ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('SEASON PASS EXCLUSIVE', style: TextStyle(color: Colors.cyan, fontSize: 12, fontWeight: FontWeight.bold)),
-            Text('ELITE LOADOUT DROP', style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(width: 15, height: 4, color: Colors.grey),
-                SizedBox(width: 5),
-                Container(width: 30, height: 4, color: Colors.cyan),
-                SizedBox(width: 5),
-                Container(width: 15, height: 4, color: Colors.grey),
-              ],
-            )
-          ],
+
+        // 2. مؤشر النقاط (Dots Indicator)
+        Positioned(
+          bottom: 20,
+          left: 0,
+          right: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              _bannerItems.length,
+              (index) => AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                height: 4,
+                width: _currentPage == index ? 30 : 15, // النقطة الحالية تكون أطول
+                decoration: BoxDecoration(
+                  color: _currentPage == index ? Colors.cyan : Colors.grey,
+                  borderRadius: BorderRadius.circular(2),
+                  boxShadow: _currentPage == index
+                      ? [BoxShadow(color: Colors.cyan.withOpacity(0.5), blurRadius: 5)]
+                      : [],
+                ),
+              ),
+            ),
+          ),
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 
   // لستة الـ Boosts الأفقية
   Widget _buildBoostList() {
